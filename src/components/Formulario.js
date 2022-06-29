@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Input from "./Input";
+import SearchSelect from "./SearchSelect";
 import Select from "./Select";
 const Formulario = ({ handleSubmit }) => {
   const [dataForm, setdataForm] = useState({
@@ -9,11 +10,11 @@ const Formulario = ({ handleSubmit }) => {
     direccion: "",
     departamento: "",
     ciudad: "",
+    pais: "",
   });
-
-  const [pais, setPais] = useState([]);
   const [ciudad, setCiudad] = useState([]);
-  const [searchCiudad, setsearchCiudad] = useState("");
+  const [pais, setPais] = useState([]);
+
   // const handleSelection = (event) => {
   //   const data = event.target.value;
   //   const name = event.target.name;
@@ -23,24 +24,24 @@ const Formulario = ({ handleSubmit }) => {
     const data = event.target.value;
     const type = event.target.name;
 
+    setdataForm({ ...dataForm, [type]: data });
+
     switch (type) {
       case "ciudad":
-        setdataForm({ ...dataForm, ciudad: data });
-        onChangeCiudad(data);
+        // setdataForm({ ...dataForm, ciudad: data });
+        onChangeSearchApi(data, "c");
         break;
       case "pais":
-        setPais(data);
+        // setdataForm({ ...dataForm, pais: data });
+        onChangeSearchApi(data, "p");
 
         break;
-
       default:
-        setdataForm({ ...dataForm, [type]: data });
     }
   };
 
-  const onChangeCiudad = async (query) => {
-    console.log(query);
-    await fetch(`http://localhost:3001/api/c?q=${query}`)
+  const onChangeSearchApi = async (query, type) => {
+    await fetch(`http://localhost:3001/api/${type}?q=${query}`)
       .then((res) => res.json())
       .then(({ data }) => setCiudad(data));
   };
@@ -78,31 +79,23 @@ const Formulario = ({ handleSubmit }) => {
           value={dataForm.direccion}
           handleChangeInput={handleChangeInput}
         />
+        {/* <SearchSelect
+          SearchValue={dataForm.pais}
+          setSearchValue={setdataForm}
+          titulo="Pais"
+          elemtsLista={ciudad}
+          handleChangeInput={handleChangeInput}
+        /> */}
+        <SearchSelect
+          SearchValue={dataForm.ciudad}
+          setSearchValue={setdataForm}
+          name="ciudad"
+          elemtsLista={ciudad}
+          handleChangeInput={handleChangeInput}
+        />
       </div>
 
-      <div className="flex flex-wrap -mx-3 mb-2">
-        <>
-          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            Ciudad
-          </label>
-          <input
-            onChange={handleChangeInput}
-            name="ciudad"
-            value={dataForm.ciudad}
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white"
-          />
-          <select
-            multiple
-            className="bg-color5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            {ciudad.map(({ name, id }) => (
-              <option key={id} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </>
-      </div>
+      <div className="flex flex-wrap -mx-3 mb-2"></div>
       <div className="flex flex-col items-center">
         <button className="rounded-full grow w-1/2 p-2 text-3xl bg-color5 text-white md:mt-5 active drop-shadow-2xl">
           Enviar

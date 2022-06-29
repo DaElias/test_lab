@@ -12,13 +12,12 @@ app.get("/api/c", async (req, res) => {
   // console.log(req.query);
   try {
     const { q } = req.query;
-    if (q === "") {
+    if (q === "")
       res.json({
         data: [],
       });
-    }
     const [rows] = await promisePool.query(
-      `select CiudadID as id , CiudadNombre as name from Ciudad where CiudadNombre like "${q}%" limit 0,50 ;`
+      `select CiudadID as id , CiudadNombre as name from Ciudad where CiudadNombre like "${q}%" limit 0,100 ;`
     );
     res.json({
       data: rows,
@@ -32,6 +31,10 @@ app.get("/api/p", async (req, res) => {
   // console.log(req.query);
   try {
     const { q } = req.query;
+    if (q === "")
+      res.json({
+        data: [],
+      });
     const [rows] = await promisePool.query(
       `SELECT PaisNombre as name FROM database.pais where paisnombre like "${q}%" LIMIT 0, 50`
     );
