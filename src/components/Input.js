@@ -32,6 +32,7 @@ const Input = ({
         value={value}
         onChange={handleChangeInput}
         name={name}
+        required
         
       />
       <p

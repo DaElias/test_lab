@@ -1,31 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Input from "./Input";
 import SearchSelect from "./SearchSelect";
-import Select from "./Select";
-const Formulario = ({ handleSubmit }) => {
-  const [dataForm, setdataForm] = useState({
-    nombre: "",
-    identificacion: "",
-    telefono: "",
-    direccion: "",
-    departamento: "",
-    ciudad: "",
-    pais: "",
-  });
+
+const initialStateDataFrom = {
+  nombre: "",
+  identificacion: "",
+  telefono: "",
+  direccion: "",
+  departamento: "",
+  ciudad: "",
+  pais: "",
+  id_ciudad: 0,
+  id_pais: 0,
+};
+
+const Formulario = () => {
+  const [dataForm, setdataForm] = useState(initialStateDataFrom);
   const [ciudad, setCiudad] = useState([]);
   const [pais, setPais] = useState([]);
 
-  // const handleSelection = (event) => {
-  //   const data = event.target.value;
-  //   const name = event.target.name;
-  //   console.log(name, data);
-  // };
+  const handleSubmit = async (event, dataFrom) => {
+    event.preventDefault();
+    await fetch("http://localhost:3001/api/", {
+      method: "POST",
+      body: JSON.stringify(dataFrom),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then(() => {
+        alert("Enviado Exitosamente");
+        setdataForm(initialStateDataFrom);
+      })
+      .catch(() => alert("Ocurrio un error inesperado!!"));
+  };
+
   const handleChangeInput = (event) => {
     const data = event.target.value;
     const type = event.target.name;
 
     setdataForm({ ...dataForm, [type]: data });
-
     switch (type) {
       case "ciudad":
         // setdataForm({ ...dataForm, ciudad: data });
@@ -43,11 +58,14 @@ const Formulario = ({ handleSubmit }) => {
   const onChangeSearchApi = async (query, type) => {
     await fetch(`http://localhost:3001/api/${type}?q=${query}`)
       .then((res) => res.json())
-      .then(({ data }) => setCiudad(data));
+      .then(({ data }) => (type === "c" ? setCiudad(data) : setPais(data)));
   };
 
   return (
-    <form className="w-full max-w-lg " onSubmit={handleSubmit}>
+    <form
+      className="w-full max-w-lg "
+      onSubmit={(event) => handleSubmit(event, dataForm)}
+    >
       <div className="flex flex-wrap -mx-3 mb-6">
         <Input
           title="Nombre"
@@ -79,13 +97,21 @@ const Formulario = ({ handleSubmit }) => {
           value={dataForm.direccion}
           handleChangeInput={handleChangeInput}
         />
-        {/* <SearchSelect
+        <SearchSelect
           SearchValue={dataForm.pais}
           setSearchValue={setdataForm}
-          titulo="Pais"
-          elemtsLista={ciudad}
+          name="pais"
+          elemtsLista={pais}
           handleChangeInput={handleChangeInput}
-        /> */}
+        />
+        <Input
+          title="departamento"
+          name="departamento"
+          placeholder="Digite la telefono"
+          value={dataForm.departamento}
+          handleChangeInput={handleChangeInput}
+          type="text"
+        />
         <SearchSelect
           SearchValue={dataForm.ciudad}
           setSearchValue={setdataForm}

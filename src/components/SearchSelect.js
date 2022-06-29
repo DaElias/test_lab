@@ -8,9 +8,12 @@ const SearchSelect = ({
   name = "",
 }) => {
   const [show, setShow] = useState(false);
-
-  const handleSearchValue = (currentElement = "") => {
-    setSearchValue((elemts) => ({ ...elemts, [name]: currentElement }));
+  const handleSearchValue = (currentElement = "", id) => {
+    setSearchValue((elemts) => ({
+      ...elemts,
+      [name]: currentElement,
+      ["id_" + name]: id,
+    }));
     setShow(false);
   };
 
@@ -33,17 +36,20 @@ const SearchSelect = ({
       {show && (
         <select
           multiple
-          className="relative bg-color5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+          className=" bg-color5 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         >
-          {elemtsLista.map(({ name, id }) => (
-            <option
-              key={id}
-              value={name}
-              onClick={() => handleSearchValue(name)}
-            >
-              {name}
-            </option>
-          ))}
+          {elemtsLista.map(({ name, id }) => {
+            return (
+              <option
+                key={id}
+                value={name}
+                onClick={() => handleSearchValue(name, id)}
+              >
+                {name}
+              </option>
+            );
+          })}
         </select>
       )}
     </div>
