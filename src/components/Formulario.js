@@ -131,7 +131,5 @@ const Formulario = () => {
   );
 };
 
-// <Select title="Departamento" handleSelect={handleSelection} />
-// <Select title="Ciudad" handleSelect={handleSelection} />
 
 export default Formulario;
