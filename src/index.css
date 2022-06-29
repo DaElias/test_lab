@@ -440,10 +440,11 @@ body{
     transform: scale(1);
   }
 }
-.active {
-  text-decoration: hsl(263, 58%, 63%) 3px underline;
+.active:hover {
+  /* text-decoration: hsl(263, 58%, 63%) 3px underline; */
   animation: 1s bounce;
 }
+
 
 .start-animation {
   animation: 1s scale-up-hor-center;
@@ -468,13 +469,4 @@ body{
   animation: pulsate-fwd 1s ease-in-out infinite both;
 }
 
-/* .wave {
-  position: absolute;
-  top: -20px;
-  transform: rotate(3.14rad);
-  z-index: -1;
-}
 
-.wave path {
-  transition: 250ms ease 0s;
-} */
